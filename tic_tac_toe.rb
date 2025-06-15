@@ -1,18 +1,6 @@
 require "pry-byebug"
 require "colorize"
 
-# Players introduce themselves
-# Players get their sign
-# Board is shown
-# The first player chooses his move
-# The board is shown
-# The second player chooses his move
-# The board is shown
-# The first player chooses his move
-# The board is shown
-# The comparator checks for victory
-# The victor is announced and game ends
-
 # This is player class
 class Player
   attr_accessor :name, :sign, :victor
@@ -110,7 +98,6 @@ class TicTacToe
   end
 
   def display_board
-    # puts "--------------------------------------------".blue
     puts "The latest board position:".blue
     puts "123 | #{@board[1]} #{@board[2]} #{@board[3]}"
     puts "456 | #{@board[4]} #{@board[5]} #{@board[6]}"
@@ -152,15 +139,12 @@ class TicTacToe
   end
 
   def play_round
-    # display_board
     puts "Round: #{count_round}".yellow
     current_player = current_player()
     puts "#{current_player.name}'s turn.".yellow
     input = get_input
     update_board(input)
     update_log(current_player, input)
-    # p @@log_history
-    # p @board
     display_board
     check_victory if count_round > 4
   end
@@ -195,14 +179,6 @@ class TicTacToe
       [@board[1], @board[5], @board[9]],
       [@board[3], @board[5], @board[7]]
     ]
-    # find_victor if victory_combo[0].none?("*") && victory_combo[0].all?(victory_combo[0][0])
-    # find_victor if victory_combo[1].none?("*") && victory_combo[1].all?(victory_combo[1][0])
-    # find_victor if victory_combo[2].none?("*") && victory_combo[2].all?(victory_combo[2][0])
-    # find_victor if victory_combo[3].none?("*") && victory_combo[3].all?(victory_combo[3][0])
-    # find_victor if victory_combo[4].none?("*") && victory_combo[4].all?(victory_combo[4][0])
-    # find_victor if victory_combo[5].none?("*") && victory_combo[5].all?(victory_combo[5][0])
-    # find_victor if victory_combo[6].none?("*") && victory_combo[6].all?(victory_combo[6][0])
-    # find_victor if victory_combo[7].none?("*") && victory_combo[7].all?(victory_combo[7][0])
     result = victory_combo.select do |element|
       element.none?("*") && element.all?(element[0])
     end
