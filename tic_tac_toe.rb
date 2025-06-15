@@ -94,7 +94,7 @@ class TicTacToe
   end
 
   def loop_game
-    play_round until @player1.victor == true || @player2.victor == true
+    play_round until @player1.victor == true || @player2.victor == true || count_round == 10
   end
 
   def display_board
@@ -147,6 +147,17 @@ class TicTacToe
     update_log(current_player, input)
     display_board
     check_victory if count_round > 4
+    declar_draw if count_round == 10
+  end
+
+  def declar_draw
+    puts "------------------------------------------".yellow
+    puts "------------------------------------------".yellow
+    puts "------------------------------------------".yellow
+    puts "And that's a draw!".yellow
+    puts "------------------------------------------".yellow
+    puts "------------------------------------------".yellow
+    puts "------------------------------------------".yellow
   end
 
   def get_input
