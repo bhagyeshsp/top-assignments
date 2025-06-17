@@ -27,6 +27,55 @@ require "pry-byebug"
 #    program provides feedback
 #    etc..etc..
 
+# Variation-3: algorithmic computer guesser
+# Human creates a code: [5,3,4,5]
+# Computer begins guessing
+#
+#  Guess-1: [1,1,1,1]
+#  Feedback: 0B0P
+#  ~ hit or miss
+#   ~ miss
+#    ~ hit
+#     ~ 4-hit target
+#      ~ 4-B target by re-arrangement
+
+# This is intelligence module for computer player
+module Intelligence
+  def begin_guessing
+    @counter == 1 ? first_guess : make_decisions
+  end
+
+  def log_game
+    @game_log[0] << @guess_array
+    @game_log[1] << create_feedback
+  end
+
+  def first_guess
+    [1, 1, 1, 1]
+  end
+
+  def make_decisions
+    hit_count > 0 ? increment_partially : increment_whole_array
+  end
+
+  # @game_log = [[[1, 1, 1, 1], [2, 2, 2, 2], [2, 3, 3, 3]], %w[0B0P 1B0P]]
+
+  def increment_partially(hit_count)
+    hit_elements = @game_log[0].last.take[hit_count]
+    increment_value = hit_elements.last + 1
+    @guess_array << hit_elements
+    @guess_array << (4 - hit_count).times(increment_value)
+  end
+
+  def increment_whole_array
+    @game_log[0].last.map { |last_guess| last_guess + 1 }
+  end
+
+  def hit_count
+    create_feedback.chars.sum(&:to_i)
+  end
+end
+
 # This is human player class
 class HumanPlayer
   attr_accessor :name
@@ -38,10 +87,12 @@ end
 
 # This is computer player class
 class ComputerPlayer
+  include Intelligence
   attr_accessor :name
 
   def initialize
     @name = %w[computron dave tars jarvis].sample
+    @game_log = [[], []]
     puts "Created @name!\n"
   end
 
