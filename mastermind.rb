@@ -14,18 +14,46 @@ require "pry-byebug"
 # The computer provides feedback: 4B
 # You've won in 3 guesses!
 
+# Variation-2
+# Offer the human player to be a mastermind
+#  if chose NO
+#   play_human_guesser
+#  if chose YES
+#   play_computer_guesser
+#    human generates manual code
+#    computer makes first guess 1111
+#    program provides feedback
+#    computer makes second guess
+#    program provides feedback
+#    etc..etc..
+
 # This is human player class
 class HumanPlayer
-  attr_accessor :name, :win
+  attr_accessor :name
 
   def initialize(name)
     @name = name
-    @win = false
   end
 end
 
 # This is computer player class
 class ComputerPlayer
+  attr_accessor :name
+
+  def initialize
+    @name = %w[computron dave tars jarvis].sample
+    puts "Created @name!\n"
+  end
+
+  def make_guess
+    guess = (1..6).to_a.sample(4)
+    puts "#{@name} guessed #{guess}\n\n"
+    guess
+  end
+end
+
+# This is MasterMind game class
+class MasterMind
   def initialize
     generate_code
     @counter = 0
@@ -33,7 +61,7 @@ class ComputerPlayer
     @bagel_array = []
   end
 
-  def play_game
+  def play_human_guesser
     welcome_screen
     until @counter == 12 || @solved_game == true
       receive_guess
@@ -42,6 +70,37 @@ class ComputerPlayer
       print_feedback
     end
     p "this was the code: #{@code}"
+  end
+
+  def play_computer_guesser
+    generate_manual_code
+    computer_player = ComputerPlayer.new
+    @counter = 0
+    until @solved_game == true
+      count_turns
+      @guess_array = computer_player.make_guess
+      create_feedback
+      check_victory unless @bagel_array.empty?
+      print_feedback
+    end
+    p "this was the code: #{@code}"
+  end
+
+  def choose_mastermind(player_name)
+    puts "\nHi #{player_name}, would you like to be the MasterMind?\nType \"y\" or \"n\" without quotes."
+    choice = gets.chomp
+    play_computer_guesser if choice == "y"
+    play_human_guesser if choice == "n"
+  end
+
+  def generate_manual_code
+    puts "\nInput your code here. It should be only four digits.\n"
+    @code = gets.chomp.chars.map(&:to_i)
+  end
+
+  def count_turns
+    @counter += 1
+    puts "This is turn no.#{@counter}"
   end
 
   def welcome_screen
@@ -96,5 +155,6 @@ class ComputerPlayer
   end
 end
 
-host = ComputerPlayer.new
-host.play_game
+game = MasterMind.new
+human_player = HumanPlayer.new("Bhagyesh")
+game.choose_mastermind(human_player.name)
