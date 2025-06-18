@@ -5,7 +5,6 @@ class ComputerPlayer
 
   def initialize
     @name = %w[computron dave tars jarvis].sample
-    @game_log = [[], []]
     puts "Created @name!\n"
   end
 
