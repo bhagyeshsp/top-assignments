@@ -5,7 +5,7 @@ class ComputerPlayer
 
   def initialize
     @name = %w[computron dave tars jarvis].sample
-    puts "Created @name!\n"
+    puts "Created #{@name}!\n"
   end
 
   def make_guess

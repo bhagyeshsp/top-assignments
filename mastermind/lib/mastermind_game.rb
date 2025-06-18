@@ -23,10 +23,9 @@ class MasterMind
   end
 
   def play_computer_guesser(game_obj)
-    # binding.pry
     generate_manual_code
     computer_player = ComputerPlayer.new
-    until @solved_game == true || @counter == 10
+    until @solved_game == true
       count_turns
       puts "This is turn no.#{@counter}"
       @guess_array = []
@@ -35,7 +34,7 @@ class MasterMind
       log_game(feedback)
       puts "\tGame Log: #{game_log}"
       check_victory unless @bagel_array.empty?
-      print_feedback
+      print_feedback unless @solved_game == true
       @hit_count = calculate_hits(feedback)
     end
     p "this was the code: #{@code}"
@@ -87,22 +86,12 @@ class MasterMind
       i += 1
     end
     @bagel_array = arr
-    puts "\tThis is bagel array: #{@bagel_array}"
+    # puts "\tThis is bagel array: #{@bagel_array}"
     "#{@bagel_array.length}B"
   end
 
   def analyze_picos
-    # puts "\tCode class: #{@code.class} Value: #{@code}"
-    # puts "\tGuess Array class: #{@guess_array.class} Value: #{@guess_array}"
-    # puts "\tBagel Array class: #{@bagel_array.class} Value: #{@bagel_array}"
-    # numb_of_picos = (@code.intersection(@guess_array) - @bagel_array).count
-    # "#{numb_of_picos}P"
-    # elements present in @code and @guess_array but not in @bagel_array
-    # [2,3,4,1] [1,2,2,2] 0B2P [1,2]
-    # [5,6,5,6] [5,5,6,6] 2B2P [5,6,5,6]
-    numb_of_picos = @code.count do |element|
-      @guess_array.include?(element)
-    end
+    numb_of_picos = @code.count { |element| @guess_array.include?(element) }
     numb_of_picos -= @bagel_array.length
     "#{numb_of_picos}P"
   end
@@ -112,12 +101,14 @@ class MasterMind
   end
 
   def check_victory
-    @solved_game = true if @bagel_array.size == 4
-    puts "You've solved it!" if @solved_game == true
+    return unless @code.eql?(@guess_array)
+
+    @solved_game = true
+    puts "\n-----------------\n-----------------\nYou've solved it!\n-----------------\n-----------------\n"
   end
 
   def print_feedback
-    puts "My feedback to your last guess:#{create_feedback}"
+    puts "My feedback to your last guess:#{create_feedback}\n\n"
   end
 
   protected

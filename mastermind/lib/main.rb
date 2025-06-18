@@ -8,5 +8,4 @@ require_relative "computer_player"
 game = MasterMind.new
 human_player = HumanPlayer.new("Bhagyesh")
 puts "choosing mastermind"
-# binding.pry
 game.choose_mastermind(human_player.name, game)
