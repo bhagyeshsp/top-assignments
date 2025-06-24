@@ -3,6 +3,7 @@ require "json"
 require_relative "dictionary"
 require_relative "play_logic"
 require_relative "file_read_write"
+require_relative "player"
 # This class contains hangman game play objects
 class Hangman
   include Dictionary
@@ -13,15 +14,21 @@ class Hangman
 
   # rubocop:disable Metrics
   def initialize(secret_word = "", correct_entries = [], incorrect_entries = [], current_arr = [], counter = 0,
-                 game_status = "")
+                 game_status = "", player = "")
     @secret_word = secret_word
     @correct_entries = correct_entries
     @incorrect_entries = incorrect_entries
     @current_arr = current_arr
     @counter = counter
     @game_status = game_status
+    @player = player
+    create_player
   end
   # rubocop:enable Metrics
+
+  def create_player
+    @player = Player.new
+  end
 
   def display_incorrect_entries
     "Past incorrect entries: #{incorrect_entries.join(',')}"
@@ -75,14 +82,15 @@ class Hangman
                 incorrect_entries: @incorrect_entries,
                 current_arr: @current_arr,
                 counter: @counter,
-                game_status: @game_status
+                game_status: @game_status,
+                player: @player.name
               })
   end
 
   def self.from_json(string)
     data = JSON.parse string
     new(data["secret_word"], data["correct_entries"], data["incorrect_entries"], data["current_arr"], data["counter"],
-        data["game_status"])
+        data["game_status"], data["player"])
   end
 
   protected
