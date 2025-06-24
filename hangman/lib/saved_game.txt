@@ -1,1 +1,2 @@
 {"secret_word":"commission","correct_entries":["c"],"incorrect_entries":["d","a","r","f","y"],"current_arr":["c","_","_","_","_","_","_","_","_","_"],"counter":6,"game_status":"","player":"michael"}
+{"secret_word":"xerox","correct_entries":["e"],"incorrect_entries":["a","i"],"current_arr":["_","e","_","_","_"],"counter":3,"game_status":"","player":"carlo"}
