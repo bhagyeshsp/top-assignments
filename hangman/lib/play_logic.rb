@@ -9,6 +9,10 @@ module PlayLogic
     gets.chomp
   end
 
+  def valid_input?(user_input)
+    user_input.chomp.length == 1
+  end
+
   def provide_feedback(input_chr, secret_word)
     if secret_word.include?(input_chr)
       log_correct(input_chr)

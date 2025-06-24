@@ -40,14 +40,20 @@ class Hangman
       @counter += 1
       puts "#{@counter}/#{@secret_word.length} attempts left".yellow
       user_input = take_input
-      if check_past_entries(user_input)
-        @counter -= 1
-        puts "\tYou've already played that letter. Guess some other letter."
-        next
+      if valid_input?(user_input)
+        if check_past_entries(user_input)
+          @counter -= 1
+          puts "\tYou've already played that letter. Guess some other letter."
+          next
+        else
+          puts provide_feedback(user_input, @secret_word)
+          puts "\t#{reveal_matching_chr(user_input, @secret_word, @current_arr)}"
+          puts "\t#{display_incorrect_entries}"
+        end
       else
-        puts provide_feedback(user_input, @secret_word)
-        puts "\t#{reveal_matching_chr(user_input, @secret_word, @current_arr)}"
-        puts "\t#{display_incorrect_entries}"
+        puts "Pls provide a valid input, try again!"
+        @counter -= 1
+        next
       end
       check_victory
     end
