@@ -34,7 +34,7 @@ class Hangman
   def play_game
     lines = open_dictionary
     @secret_word = filter_lines(lines).sample(1).join
-    puts "Secret word is: #{@secret_word}"
+    # puts "Secret word is: #{@secret_word}"
     @current_arr = create_mask(@secret_word)
     puts "Masked word is: #{@current_arr.join(' ')} with length #{@secret_word.length}".yellow
     @counter = 0
@@ -45,6 +45,7 @@ class Hangman
     until @game_status == "won" || @game_status == "lost"
       increment_counter
       display_attempt_status
+      display_save_prompt
       user_input = take_input
       if user_input == "1" # User wants to save the game
         initiate_saving(self)

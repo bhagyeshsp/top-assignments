@@ -59,6 +59,10 @@ module PlayLogic
     puts "#{@counter}/#{@secret_word.length} attempts left".yellow
   end
 
+  def display_save_prompt
+    puts "To save the game, type 1.".blue
+  end
+
   def take_input
     puts "\n*****************************\nType your next guess letter and hit enter:".blue
     gets.chomp
