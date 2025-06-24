@@ -37,27 +37,30 @@ class Hangman
     puts "Secret word is: #{@secret_word}"
     @current_arr = create_mask(@secret_word)
     puts "Masked word is: #{@current_arr.join(' ')} with length #{@secret_word.length}".yellow
+    @counter = 0
     loop_game
   end
 
   def loop_game
     until @game_status == "won" || @game_status == "lost"
-      @counter += 1
-      puts "#{@counter}/#{@secret_word.length} attempts left".yellow
+      increment_counter
+      display_attempt_status
       user_input = take_input
+      if user_input == "1" # User wants to save the game
+        initiate_saving(self)
+        break
+      end
       if valid_input?(user_input)
         if check_past_entries(user_input)
-          @counter -= 1
+          decrement_counter
           puts "\tYou've already played that letter. Guess some other letter."
           next
         else
-          puts provide_feedback(user_input, @secret_word)
-          puts "\t#{reveal_matching_chr(user_input, @secret_word, @current_arr)}"
-          puts "\t#{display_incorrect_entries}"
+          display_game_status(user_input)
         end
       else
         puts "Pls provide a valid input, try again!"
-        @counter -= 1
+        decrement_counter
         next
       end
       check_victory

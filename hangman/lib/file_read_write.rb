@@ -3,7 +3,7 @@ module SaveLoadGame
   def save_game(serialized_obj)
     f = File.open("saved_game.txt", "w")
     f.puts serialized_obj
-    puts "Saved game to saved_game.txt!"
+    puts "Saved game to saved_game.txt!".yellow
     f.close
   end
 

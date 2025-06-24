@@ -31,8 +31,32 @@ module PlayLogic
     new_game.loop_game
   end
 
+  def initiate_saving(game_obj)
+    @counter -= 1
+    serialized_obj = game_obj.to_json
+    save_game(serialized_obj)
+    show_processing
+    open_saved_game
+  end
+
+  def reset_game_parameters
+    @counter = 0
+  end
+
   def create_mask(secret_word)
     secret_word.gsub(/[a-z]/, "_").chars
+  end
+
+  def increment_counter
+    @counter += 1
+  end
+
+  def decrement_counter
+    @counter -= 1
+  end
+
+  def display_attempt_status
+    puts "#{@counter}/#{@secret_word.length} attempts left".yellow
   end
 
   def take_input
@@ -42,6 +66,12 @@ module PlayLogic
 
   def valid_input?(user_input)
     user_input.chomp.length == 1
+  end
+
+  def display_game_status(user_input)
+    puts provide_feedback(user_input, @secret_word)
+    puts "\t#{reveal_matching_chr(user_input, @secret_word, @current_arr)}"
+    puts "\t#{display_incorrect_entries}"
   end
 
   def provide_feedback(input_chr, secret_word)
