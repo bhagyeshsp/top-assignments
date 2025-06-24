@@ -83,14 +83,17 @@ class Hangman
 
   protected
 
-  attr_accessor :secret_word, :correct_entries, :incorrect_entries, :current_string, :game_status
+  attr_accessor :secret_word, :correct_entries, :incorrect_entries, :current_arr, :game_status
 end
 
+# new_game = Hangman.new
+# new_game.play_game
+# serialized = new_game.to_json
+# puts serialized
+# new_game.save_game(serialized)
+# sleep 2
+# p loaded_game_obj = new_game.load_game
+# p Hangman.from_json(loaded_game_obj.first)
+
 new_game = Hangman.new
-new_game.play_game
-serialized = new_game.to_json
-puts serialized
-new_game.save_game(serialized)
-sleep 2
-p loaded_game_obj = new_game.load_game
-p Hangman.from_json(loaded_game_obj.first)
+new_game.begin_game

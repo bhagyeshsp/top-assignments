@@ -1,1 +1,1 @@
-{"secret_word":"charleston","correct_entries":["a","s","e","r","t"],"incorrect_entries":["d","f","g","q","w"],"current_arr":["_","_","a","r","_","e","s","t","_","_"],"counter":10,"game_status":"lost"}
+{"secret_word":"charleston","correct_entries":["a","s","e","r","t"],"incorrect_entries":["d","f","g","q","w"],"current_arr":["_","_","a","r","_","e","s","t","_","_"],"counter":5,"game_status":""}

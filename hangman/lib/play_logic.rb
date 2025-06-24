@@ -1,5 +1,36 @@
 # This module contains the game play logic for hangman game class
 module PlayLogic
+  def begin_game
+    banner = `figlet "Hangman"`.red
+    puts banner
+    open_saved_game
+  end
+
+  def open_saved_game
+    puts "Do you want to open a previously saved game?\nType 'y' to open\nOr type 'n' to proceed with a new game.".yellow
+    user_choice = gets.chomp
+    if user_choice == "y"
+      resume_saved_game
+    elsif user_choice == "n"
+      puts "Great! Beginning a new game!".yellow
+      show_processing
+      play_game
+    else
+      puts "Pls check your input and try again.".red
+    end
+  end
+
+  def resume_saved_game
+    file_content = load_game
+    new_game = Hangman.from_json(file_content.first)
+    puts "Resuming the saved game now. Game obj: #{new_game}".blue
+    show_processing
+    banner = `figlet "Welcome back"`
+    puts banner
+    puts "\tGame details:\t\nAttempts made: #{new_game.counter}\nIncorrect entries: #{new_game.incorrect_entries.join(',')}\nLatest revealed letters: #{new_game.current_arr.join(' ')}"
+    new_game.loop_game
+  end
+
   def create_mask(secret_word)
     secret_word.gsub(/[a-z]/, "_").chars
   end
@@ -63,5 +94,12 @@ module PlayLogic
       @game_status = "lost"
       puts "\n********************\nYou've lost!\nThe secret word was '#{@secret_word}'.\n********************\n".red
     end
+  end
+
+  def show_processing
+    puts "..".green
+    sleep 1
+    puts ".".green
+    sleep 1
   end
 end
