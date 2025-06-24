@@ -7,10 +7,12 @@ module PlayLogic
   end
 
   def open_saved_game
-    puts "Do you want to open a previously saved game?\nType 'y' to open\nOr type 'n' to proceed with a new game.".yellow
+    puts "Type 'y' to open a saved game\nType 'n' to proceed with a new game.".yellow
     user_choice = gets.chomp
     if user_choice == "y"
-      resume_saved_game
+      show_processing
+      puts "Great! Here's the list of previously saved games.\nTo select the game, type its index number and hit enter.".green
+      display_game_list
     elsif user_choice == "n"
       puts "Great! Beginning a new game!".yellow
       show_processing
@@ -20,19 +22,41 @@ module PlayLogic
     end
   end
 
-  def resume_saved_game
-    file_content = load_game
-    new_game = Hangman.from_json(file_content.first)
-    puts "Resuming the saved game now. Game obj: #{new_game}".blue
+  def resume_saved_game(selected_game)
+    resumed_game = Hangman.from_json(selected_game)
+    display_resume_screen(resumed_game)
+    resumed_game.loop_game
+  end
+
+  def display_game_list
+    game_list_arr = load_game
+    game_list_arr.each.with_index do |game, idx|
+      unserialized_game = Hangman.from_json(game)
+      puts "index no:#{idx + 1} #{unserialized_game.show_game_entries}".blue
+    end
+    select_game(game_list_arr)
+  end
+
+  def show_game_entries
+    "| Saved: #{@save_time}    | Player: #{@player} | Word length: #{@secret_word.length} | Attempts left: #{@counter}/#{@secret_word.length}"
+  end
+
+  def select_game(game_list_arr)
+    selected_game_idx = gets.chomp.to_i
+    selected_game = game_list_arr[selected_game_idx - 1]
+    resume_saved_game(selected_game)
+  end
+
+  def display_resume_screen(game_obj)
     show_processing
     banner = `figlet "Welcome back"`
     puts banner
-    puts "\tGame details:\t\nAttempts made: #{new_game.counter}\nIncorrect entries: #{new_game.incorrect_entries.join(',')}\nLatest revealed letters: #{new_game.current_arr.join(' ')}"
-    new_game.loop_game
+    puts "\tGame details:\n\tAttempts made: #{game_obj.counter}\n\tIncorrect entries: #{game_obj.incorrect_entries.join(',')}\n\tLatest revealed letters: #{game_obj.current_arr.join(' ')}\n\n"
   end
 
   def initiate_saving(game_obj)
     @counter -= 1
+    @save_time = Time.now
     serialized_obj = game_obj.to_json
     save_game(serialized_obj)
     show_processing
@@ -56,15 +80,15 @@ module PlayLogic
   end
 
   def display_attempt_status
-    puts "#{@counter}/#{@secret_word.length} attempts left".yellow
+    puts "\n*****************************\nThis is attempt number #{@counter} of #{@secret_word.length}\n".green
   end
 
   def display_save_prompt
-    puts "To save the game, type 1.".blue
+    puts "Note: to save the game, type 1.".red
   end
 
   def take_input
-    puts "\n*****************************\nType your next guess letter and hit enter:".blue
+    puts "Type your next guess letter and hit enter:".blue
     gets.chomp
   end
 
@@ -123,10 +147,14 @@ module PlayLogic
   def check_victory
     if @current_arr == @secret_word.chars
       @game_status = "won"
+      banner = `figlet "You're the saviour!"`.green
+      puts banner
       puts "\n********************\nYou've saved the man on death row!\n********************\n".green
     elsif @counter >= @secret_word.length
       @game_status = "lost"
-      puts "\n********************\nYou've lost!\nThe secret word was '#{@secret_word}'.\n********************\n".red
+      banner = `figlet "Loser!"`.red
+      puts banner
+      puts "\n********************\nThe man has died!\nThe secret word was '#{@secret_word}'.\n********************\n".red
     end
   end
 

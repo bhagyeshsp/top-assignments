@@ -1,3 +1,5 @@
+require_relative "game_hangman"
+
 # Game begins
 # Load word dictionary
 #   Read the file
@@ -32,3 +34,6 @@
 #     Continue the game from where left off
 #   If player does not want to load the game
 #     Start a new game
+
+new_game = Hangman.new
+new_game.begin_game

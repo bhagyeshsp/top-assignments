@@ -14,20 +14,25 @@ class Hangman
 
   # rubocop:disable Metrics
   def initialize(secret_word = "", correct_entries = [], incorrect_entries = [], current_arr = [], counter = 0,
-                 game_status = "", player = "")
+                 game_status = "", player_name = "", save_time = "")
     @secret_word = secret_word
     @correct_entries = correct_entries
     @incorrect_entries = incorrect_entries
     @current_arr = current_arr
     @counter = counter
     @game_status = game_status
-    @player = player
-    create_player
+    @player = player_name
+    @save_time = save_time
   end
   # rubocop:enable Metrics
 
+  def to_s
+    "secret_word: #{@secret_word}, correct_entries: #{@correct_entries}, incorrect_entries: #{@incorrect_entries}, current_arr: #{@current_arr}, counter: #{@counter}, game_status: #{@game_status}, player: #{@player}"
+  end
+
   def create_player
-    @player = Player.new
+    player = Player.new
+    @player = player.name
   end
 
   def display_incorrect_entries
@@ -39,6 +44,7 @@ class Hangman
   end
 
   def play_game
+    create_player
     lines = open_dictionary
     @secret_word = filter_lines(lines).sample(1).join
     # puts "Secret word is: #{@secret_word}"
@@ -83,29 +89,18 @@ class Hangman
                 current_arr: @current_arr,
                 counter: @counter,
                 game_status: @game_status,
-                player: @player.name
+                player: @player,
+                save_time: @save_time
               })
   end
 
   def self.from_json(string)
     data = JSON.parse string
     new(data["secret_word"], data["correct_entries"], data["incorrect_entries"], data["current_arr"], data["counter"],
-        data["game_status"], data["player"])
+        data["game_status"], data["player"], data["save_time"])
   end
 
   protected
 
   attr_accessor :secret_word, :correct_entries, :incorrect_entries, :current_arr, :game_status
 end
-
-# new_game = Hangman.new
-# new_game.play_game
-# serialized = new_game.to_json
-# puts serialized
-# new_game.save_game(serialized)
-# sleep 2
-# p loaded_game_obj = new_game.load_game
-# p Hangman.from_json(loaded_game_obj.first)
-
-new_game = Hangman.new
-new_game.begin_game
