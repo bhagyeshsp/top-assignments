@@ -1,22 +1,27 @@
 require "colorize"
-
+require "json"
 require_relative "dictionary"
 require_relative "play_logic"
+require_relative "file_read_write"
 # This class contains hangman game play objects
 class Hangman
   include Dictionary
   include PlayLogic
+  include SaveLoadGame
 
   attr_reader :counter
 
-  def initialize
-    @secret_word = ""
-    @correct_entries = []
-    @incorrect_entries = []
-    @current_arr = []
-    @counter = 0
-    @game_status = ""
+  # rubocop:disable Metrics
+  def initialize(secret_word = "", correct_entries = [], incorrect_entries = [], current_arr = [], counter = 0,
+                 game_status = "")
+    @secret_word = secret_word
+    @correct_entries = correct_entries
+    @incorrect_entries = incorrect_entries
+    @current_arr = current_arr
+    @counter = counter
+    @game_status = game_status
   end
+  # rubocop:enable Metrics
 
   def display_incorrect_entries
     "Past incorrect entries: #{incorrect_entries.join(',')}"
@@ -59,11 +64,33 @@ class Hangman
     end
   end
 
+  def to_json(*_args)
+    JSON.dump({
+                secret_word: @secret_word,
+                correct_entries: @correct_entries,
+                incorrect_entries: @incorrect_entries,
+                current_arr: @current_arr,
+                counter: @counter,
+                game_status: @game_status
+              })
+  end
+
+  def self.from_json(string)
+    data = JSON.parse string
+    new(data["secret_word"], data["correct_entries"], data["incorrect_entries"], data["current_arr"], data["counter"],
+        data["game_status"])
+  end
+
   protected
 
   attr_accessor :secret_word, :correct_entries, :incorrect_entries, :current_string, :game_status
 end
 
-# new_obj = Hangman.new
 new_game = Hangman.new
 new_game.play_game
+serialized = new_game.to_json
+puts serialized
+new_game.save_game(serialized)
+sleep 2
+p loaded_game_obj = new_game.load_game
+p Hangman.from_json(loaded_game_obj.first)
