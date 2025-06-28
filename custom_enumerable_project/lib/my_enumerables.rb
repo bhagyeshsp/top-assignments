@@ -1,14 +1,13 @@
 module Enumerable
   # Your code goes here
-  # rubocop: disable Style/For
+  # rubocop: disable Style/For, Style/RedundantSelf
   def my_each_with_index
-    # begin counting from 0, a proxy for index
     i = 0
-    for element in self do
+    self.my_each do |element|
       yield(element, i)
-      # near the end of each iteration, increase the index value by 1
       i += 1
     end
+    self
   end
 
   def my_select
@@ -103,7 +102,7 @@ module Enumerable
   end
 end
 
-# rubocop: enable Style/For
+# rubocop: enable Style/For, Style/RedundantSelf
 # [1, 1, 2, 3, 5, 8, 13, 21, 34]
 
 # You will first have to define my_each
