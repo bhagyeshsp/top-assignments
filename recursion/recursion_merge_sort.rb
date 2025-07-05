@@ -3,36 +3,35 @@
 # An input of [3, 2, 1, 13, 8, 5, 0, 1] should return [0, 1, 1, 2, 3, 5, 8, 13], and an input of [105, 79, 100, 110] should return [79, 100, 105, 110].
 
 def merge_sort(arr, sorted_arr = [])
-  # take the array value
-  # split the array evenly
-  # binding.pry
-  return sorted_arr if sorted_arr.length == arr.length
+  # take array
+  # begin splitting
+  #   select left subarray
+  #     begin splitting
+  #       select left subarray
+  #         hit the length of 1?
+  #           begin comparing left and right subarrays
+  #             select the smaller of the two
+  #               add it to a new array
+  #                 add the remaining element to that array
+  #   select right subarray
+  #     begin splitting
+  #       select left subarray
+  #         begin splitting
+  #           select the left subarray
+  #             hit the length of 1?
+  #           begin comparing left and right subarrays
+  #             select the smaller of the two
+  #               add it to a new array
+  #                 add the remaining element to that array
+  #
+  # Method comparing multi-element array with another multi-element array
 
-  # [3, 2, 1, 13, 8, 5, 0, 1]
-  # [3, 2, 1, 13]
-  if arr.length > 2
-    left_arr = split_left(arr)
-    p "left one: #{left_arr}"
-    sleep 0.5
-    # [8, 5, 0, 1]
-    right_arr = split_right(arr, left_arr)
-    p "right one: #{right_arr}"
-    sleep 0.5
-    merge_sort(left_arr, sorted_arr)
-    merge_sort(right_arr, sorted_arr)
-  else
-    sorted_arr << sort_arr(arr, sorted_arr)
-  end
-
-  # array length of 1 detected, can't split, ready for merge
-
-  # same length of 1 for the right subarray, ready for merge
-  # compare the left and right subarray
-  # add the lower value to the merge_arr
-  # transfer the remaining values to the merge_arr
-  # finished merging
-  # select the right subarray
-  # split the array evenly
+  # select the new array on left-side and new array on right side
+  #   compare left_array's 1st element with right_array's 1st element
+  #     add the smaller value to a new array AND remove it from the array
+  #   compare left_array's 1st element with right_array's 1st element
+  #     add the smaller value to a new array AND remove it from the array
+  #   repeat the steps until the merged array length is not equal to original array's length
 end
 
 def split_left(arr)
@@ -47,13 +46,13 @@ def split_right(arr, left_arr)
   arr[left_arr.length, (arr.length - 1)]
 end
 
-def sort_arr(arr, sorted_arr)
-  sorted_arr << [arr[0], arr[1]].min
-  sorted_arr << [arr[0], arr[1]].max
-  p sorted_arr
+def sort_arr(left_arr, right_arr, sorted_arr)
+  sorted_arr << [left_arr[0], right_arr[0]].min
+  sorted_arr << [left_arr[0], right_arr[0]].max
+  sorted_arr
 end
 
 def merge_arr(left_arr, right_arr)
 end
 
-p merge_sort([3, 2, 1, 13, 8, 5, 0, 1])
+merge_sort([3, 2, 1, 13, 8, 5, 0, 1])
