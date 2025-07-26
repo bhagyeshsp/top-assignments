@@ -9,8 +9,9 @@ class LinkedList
   end
 
   # <LinkedList Obj: @head = <Node Obj: @value="xyz", @next_node=nil>>
-  def append(value)
+  def append(key, value)
     new_node = Node.new
+    new_node.key = key
     new_node.value = value
     if @count.zero?
       @count += 1
@@ -22,11 +23,12 @@ class LinkedList
     end
   end
 
-  def prepend(value)
+  def prepend(key, value)
     # Detach the whole nested node list from the head and make room for prepending
     old_first_node = self.head
     # Create the prepending node
     new_node = Node.new
+    new_node.key = key
     new_node.value = value
     # Attach the old nested node list to the new node
     new_node.next_node = old_first_node
@@ -62,21 +64,32 @@ class LinkedList
     @count -= 1
   end
 
-  def contains?(value, node_obj = self.head, counter = 1)
-    return true if value == node_obj.value
+  # Check whether a key exists?
+  def contains?(key, node_obj = self.head, counter = 1)
+    return false if node_obj.nil?
+    return true if key == node_obj.key
     return false if @count == counter
 
     counter += 1
-    contains?(value, node_obj.next_node, counter)
+    contains?(key, node_obj.next_node, counter)
   end
 
-  # If I input "dog", the function will iterate through all nodes looking for "dog" value and returns its index number
-  def find(value, node_obj = self.head, counter = 1)
-    return counter if value == node_obj.value
+  # We input key and output its related value if it is present
+  def find_value(key, node_obj = self.head, counter = 1)
+    return node_obj.value if key == node_obj.key
+    return nil if @count == counter
+
+    counter += 1
+    find_value(key, node_obj.next_node, counter)
+  end
+
+  # Find position of the provided key in the linkedlist object
+  def find_position(key, node_obj = self.head, counter = 1)
+    return counter if key == node_obj.key
     return nil if counter == @count
 
     counter += 1
-    find(value, node_obj.next_node, counter)
+    find_position(key, node_obj.next_node, counter)
   end
 
   # ( value ) -> ( value ) -> ( value ) -> nil
@@ -91,6 +104,25 @@ class LinkedList
   def format_string(string_array)
     formatted_arr = string_array.map { |value| "( #{value} ) -> " }
     "#{formatted_arr.join} nil"
+  end
+
+  def update_node(key, value, index)
+    if index == 1 || index > @count
+      puts "\n***Error: Instead of using insert_at method, consider using prepend or append methods or make sure the index value is within the range of the object size.\n\n"
+    else
+      # Find out the value of the nodes right side of the index
+      old_detaching_nodes = self.at(index)
+      # Find out the node preceding the index
+      preceding_node = self.at(index - 1)
+      # Create the new node from the input
+      new_node = Node.new
+      new_node.value = value
+      # Attach the new_node to the preceding node
+      preceding_node.next_node = new_node
+      # Attach the old_detaching_nodes to the new_node
+      new_node.next_node = old_detaching_nodes
+      @count += 1
+    end
   end
 
   # We may need to add a value

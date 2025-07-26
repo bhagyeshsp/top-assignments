@@ -2,16 +2,14 @@
 # Class definition for HashMap class objects
 class HashMap
   @@loadfactor = 0.75
-  @@capacity = 0
-  @@hash_codes = []
 
   def initialize
     @buckets = Array.new(16)
   end
 
   # A class method to check the current capacity of the HashMap
-  def self.check_capacity
-    @@capacity
+  def capacity
+    @buckets.length - @buckets.count(nil)
   end
 
   # This method converts a key into a hash code
@@ -22,18 +20,68 @@ class HashMap
     hash_code % 16
   end
 
-  # If the newly generated hashcode doesn't exist, we increase the capacity value by 1
-  def update_capacity(hash_code)
-    @@capacity += 1 if @@hash_codes.include?(hash_code)
-  end
-
   # Create a new key-value pair or update an existing one
   def set(key, value)
     index = hash(key)
     raise IndexError if index.negative? || index >= @buckets.length
 
-    update_capacity(index)
-    @buckets[index] = [key, value]
+    if @buckets[index].nil?
+      new_bucket = LinkedList.new
+      new_bucket.append(key, value)
+      @buckets[index] = new_bucket
+    else
+      existing_bucket = @buckets[index]
+      # if bucket index is not nil, check for existing keys
+      # if a key exists
+      # find out its bucket position
+      # update the node at that position
+      if existing_bucket.contains?(key)
+        position = existing_bucket.find_position(key)
+        target_node = existing_bucket.at(position)
+        target_node.value = value
+
+      # if a key doesnt exist, append the node
+      else
+        existing_bucket.append(key, value)
+
+      end
+
+    end
+  end
+
+  def get(key)
+    index = hash(key)
+    raise IndexError if index.negative? || index >= @buckets.length
+
+    # return nil if the bucket or its head is nil
+    if @buckets[index].nil? || @buckets[index].head.nil?
+      nil
+    else
+      # if bucket is not nil, but it doesn't contain the key, return nil
+      return nil unless @buckets[index].contains?(key)
+
+      # if it contains the key, find the value
+      @buckets[index].find_value(key)
+    end
+  end
+
+  def has?(key)
+    index = hash(key)
+    return false if @buckets[index].nil? || @buckets[index].head.nil?
+
+    bucket = @buckets[index]
+    bucket.contains?(key)
+  end
+
+  def remove(key)
+    return nil unless has?(key)
+
+    index = hash(key)
+    bucket = @buckets[index]
+    removal_value = bucket.find_value(key)
+    position = bucket.find_position(key)
+    bucket.remove_at(position)
+    removal_value
   end
 end
 # rubocop:enable Style/ClassVars
