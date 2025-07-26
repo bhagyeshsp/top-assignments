@@ -83,6 +83,40 @@ class HashMap
     bucket.remove_at(position)
     removal_value
   end
+
+  # Returns the number of stored keys in the HashMap object
+  def length
+    non_empty_buckets = @buckets.select { |bucket| !bucket.nil? }
+    non_empty_buckets.sum(&:count)
+  end
+
+  def clear
+    @buckets = Array.new(16)
+  end
+
+  # Returns an array containing all the keys inside the hash map
+  def keys
+    # Collect all non-nil buckets in an array
+    non_empty_buckets = @buckets.reject(&:nil?)
+    # Iterate through each bucket and collect their keys
+    result = non_empty_buckets.map(&:collect_keys)
+    result.flatten
+  end
+
+  def values
+    # Collect all non-nil buckets in an array
+    non_empty_buckets = @buckets.reject(&:nil?)
+    # Iterate through each bucket and collect their keys
+    result = non_empty_buckets.map(&:collect_values)
+    result.flatten
+  end
+
+  def entries
+    # Collect all non-nil buckets in an array
+    non_empty_buckets = @buckets.reject(&:nil?)
+    # Iterate through each bucket and collect their keys
+    non_empty_buckets.map(&:collect_pairs)
+  end
 end
 # rubocop:enable Style/ClassVars
 

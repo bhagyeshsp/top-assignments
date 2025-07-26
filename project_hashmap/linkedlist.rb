@@ -1,7 +1,7 @@
 # rubocop:disable Style/RedundantSelf
 # Contains methods for LinkedList class objects
 class LinkedList
-  attr_accessor :head
+  attr_accessor :head, :count
 
   def initialize
     @count = 0
@@ -160,6 +160,35 @@ class LinkedList
       preceding_node.next_node = retaining_nodes
       @count -= 1
     end
+  end
+
+  def collect_keys(node_obj = self.head, keys = [])
+    keys << node_obj.key
+    return keys if node_obj.next_node.nil? || node_obj.nil?
+
+    collect_keys(node_obj.next_node, keys)
+  end
+
+  def collect_values(node_obj = self.head, values = [])
+    values << node_obj.value
+    return values if node_obj.next_node.nil? || node_obj.nil?
+
+    collect_values(node_obj.next_node, values)
+  end
+
+  def collect_pairs(node_obj = self.head, pairs = [])
+    pairs << [node_obj.key, node_obj.value]
+    return pairs if node_obj.next_node.nil? || node_obj.nil?
+
+    collect_pairs(node_obj.next_node, pairs)
+  end
+
+  def find_position(key, node_obj = self.head, counter = 1)
+    return counter if key == node_obj.key
+    return nil if counter == @count
+
+    counter += 1
+    find_position(key, node_obj.next_node, counter)
   end
 end
 # rubocop:enable Style/RedundantSelf
