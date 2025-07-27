@@ -1,7 +1,7 @@
 require_relative "hashmap"
 require_relative "node"
 require_relative "linkedlist"
-
+DEBUG = false
 # new_hs = HashMap.new
 
 # p new_hs.set("Charlie", "admin")

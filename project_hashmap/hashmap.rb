@@ -1,3 +1,4 @@
+# rubocop:disable Layout/LineLength
 # Class definition for HashMap class objects
 class HashMap
   attr_accessor :capacity, :buckets, :size
@@ -8,6 +9,7 @@ class HashMap
     @loadfactor = 0.75
     @size = 0
     @buckets = Array.new(@capacity)
+    puts "\n\tHashMap Object initialized with: capacity:#{@capacity}, load_factor:#{@loadfactor}, size:#{@size}, buckets:#{@buckets}\n\n" if DEBUG
   end
 
   # Returns the total elements in the HashMap object
@@ -53,6 +55,7 @@ class HashMap
     if need_expansion?
       expanded_hashmap_obj = duplicate_hashmap
       copy_content(expanded_hashmap_obj)
+      puts "\tHashMap Object expanded successfully!\n" if DEBUG
     end
 
     index = hash(key)
@@ -61,17 +64,22 @@ class HashMap
     @size += 1
 
     if @buckets[index].nil?
+      puts "\tNo bucket exists, creating a new bucket.\n" if DEBUG
       new_bucket = LinkedList.new
       new_bucket.append(key, value)
       @buckets[index] = new_bucket
+      puts "\tCreated new bucket: #{new_bucket}\n" if DEBUG
     else
       existing_bucket = @buckets[index]
       if existing_bucket.contains?(key)
+        puts "\tA bucket with the provided key already exists.\n" if DEBUG
         position = existing_bucket.find_position(key)
         target_node = existing_bucket.at(position)
         target_node.value = value
+        puts "\tThe existing key's value updated: #{value}\n" if DEBUG
       else
         existing_bucket.append(key, value)
+        puts "\tkey-values appended to an existing bucket.\n" if DEBUG
       end
     end
   end
@@ -110,6 +118,7 @@ class HashMap
     bucket = @buckets[index]
     removal_value = bucket.find_value(key)
     position = bucket.find_position(key)
+    puts "\tRemoval method debug info: index:#{index}, bucket:#{bucket}, removal_value:#{removal_value}, position:#{position}.\n" if DEBUG
     bucket.remove_at(position)
     @size -= 1
     removal_value
@@ -132,6 +141,7 @@ class HashMap
   def keys
     # Collect all non-nil buckets in an array
     non_empty_buckets = @buckets.reject(&:nil?)
+    puts "\tKeys method debug info: Non empty buckets:#{non_empty_buckets}\n" if DEBUG
     # Iterate through each bucket and collect their keys
     result = non_empty_buckets.map(&:collect_keys)
     result.flatten
