@@ -1,29 +1,64 @@
-# rubocop:disable Style/ClassVars
 # Class definition for HashMap class objects
 class HashMap
-  @@loadfactor = 0.75
+  attr_accessor :capacity, :buckets, :size
 
-  def initialize
-    @buckets = Array.new(16)
+  # Initialize the HashMap object with a default capacity of 16
+  def initialize(capacity = 16)
+    @capacity = capacity
+    @loadfactor = 0.75
+    @size = 0
+    @buckets = Array.new(@capacity)
   end
 
-  # A class method to check the current capacity of the HashMap
-  def capacity
-    @buckets.length - @buckets.count(nil)
+  # Returns the total elements in the HashMap object
+  # It is kind of similar to the #length method
+  def current_load
+    @size
   end
 
-  # This method converts a key into a hash code
+  # Checks whether the HashMap object needs expansion
+  def need_expansion?
+    true if current_load >= (@capacity * @loadfactor)
+  end
+
+  # Re-hashes the existing HashMap object and creates an expanded object with a double capacity
+  def duplicate_hashmap
+    expanded_hashmap_obj = HashMap.new(@capacity * 2)
+    old_entries = entries.flatten
+    # Convert the old entries arr to hash for easy key-value iteration
+    old_entries_hsh = Hash[*old_entries]
+    old_entries_hsh.each_pair do |k, v|
+      expanded_hashmap_obj.set(k, v)
+    end
+    expanded_hashmap_obj
+  end
+
+  # Copies the content of the expanded HashMap object to the existing object
+  def copy_content(expanded_hashmap_obj)
+    @buckets = expanded_hashmap_obj.buckets
+    @capacity = expanded_hashmap_obj.capacity
+    @size = expanded_hashmap_obj.size
+  end
+
+  # Returns an index value by converting a key into a hash code and finding a modulo
   def hash(key)
     hash_code = 0
     prime_number = 31
     key.each_char { |char| hash_code = (prime_number * hash_code) + char.ord }
-    hash_code % 16
+    hash_code % @capacity
   end
 
-  # Create a new key-value pair or update an existing one
+  # Creates a new key-value pair or updates an existing one
   def set(key, value)
+    if need_expansion?
+      expanded_hashmap_obj = duplicate_hashmap
+      copy_content(expanded_hashmap_obj)
+    end
+
     index = hash(key)
     raise IndexError if index.negative? || index >= @buckets.length
+
+    @size += 1
 
     if @buckets[index].nil?
       new_bucket = LinkedList.new
@@ -31,21 +66,13 @@ class HashMap
       @buckets[index] = new_bucket
     else
       existing_bucket = @buckets[index]
-      # if bucket index is not nil, check for existing keys
-      # if a key exists
-      # find out its bucket position
-      # update the node at that position
       if existing_bucket.contains?(key)
         position = existing_bucket.find_position(key)
         target_node = existing_bucket.at(position)
         target_node.value = value
-
-      # if a key doesnt exist, append the node
       else
         existing_bucket.append(key, value)
-
       end
-
     end
   end
 
@@ -53,18 +80,20 @@ class HashMap
     index = hash(key)
     raise IndexError if index.negative? || index >= @buckets.length
 
-    # return nil if the bucket or its head is nil
+    # Returns nil if the bucket or its head is nil
     if @buckets[index].nil? || @buckets[index].head.nil?
       nil
     else
-      # if bucket is not nil, but it doesn't contain the key, return nil
+      # If bucket is non-nil, but it doesn't contain the key, return nil
+      # Happens in case of removal of a node from the linkedlist
       return nil unless @buckets[index].contains?(key)
 
-      # if it contains the key, find the value
+      # If it contains the key, find the value
       @buckets[index].find_value(key)
     end
   end
 
+  # Checks whether a key exists in the HashMap object
   def has?(key)
     index = hash(key)
     return false if @buckets[index].nil? || @buckets[index].head.nil?
@@ -73,6 +102,7 @@ class HashMap
     bucket.contains?(key)
   end
 
+  # Removes an existing key from the HashMap object
   def remove(key)
     return nil unless has?(key)
 
@@ -81,6 +111,7 @@ class HashMap
     removal_value = bucket.find_value(key)
     position = bucket.find_position(key)
     bucket.remove_at(position)
+    @size -= 1
     removal_value
   end
 
@@ -90,8 +121,11 @@ class HashMap
     non_empty_buckets.sum(&:count)
   end
 
+  # Removes all entries from the HashMap object
   def clear
     @buckets = Array.new(16)
+    @capacity = 16
+    @size = 0
   end
 
   # Returns an array containing all the keys inside the hash map
@@ -103,6 +137,7 @@ class HashMap
     result.flatten
   end
 
+  # Returns an array containing all the values inside the HashMap object
   def values
     # Collect all non-nil buckets in an array
     non_empty_buckets = @buckets.reject(&:nil?)
@@ -111,6 +146,7 @@ class HashMap
     result.flatten
   end
 
+  # Returns an array containing all the key-value pairs inside the HashMap object
   def entries
     # Collect all non-nil buckets in an array
     non_empty_buckets = @buckets.reject(&:nil?)
@@ -118,6 +154,4 @@ class HashMap
     non_empty_buckets.map(&:collect_pairs)
   end
 end
-# rubocop:enable Style/ClassVars
-
 # raise IndexError if index.negative? || index >= @buckets.length
