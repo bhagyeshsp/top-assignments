@@ -9,3 +9,12 @@ test_tree.pretty_print
 test_tree.insert(600)
 p test_tree
 test_tree.pretty_print
+test_tree.delete(600)
+# p test_tree
+test_tree.pretty_print
+test_tree.delete(9)
+test_tree.pretty_print
+test_tree.delete(8)
+test_tree.pretty_print
+test_tree.delete(23)
+test_tree.pretty_print
