@@ -52,3 +52,4 @@ test_tree.rebalance
 test_tree.pretty_print
 # Recheck whether the method rightly identifies it as balanced
 puts test_tree.balanced?
+p test_tree.delete(900)

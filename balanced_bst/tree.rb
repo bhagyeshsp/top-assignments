@@ -37,10 +37,16 @@ class Tree
   end
 
   def delete(key, curr_node = @root)
+    # Check if the key exists in the tree
+    return nil unless level_order.map(&:value).include?(key)
+
     curr_node.delete(key, curr_node)
   end
 
   def find(key, curr_node = @root)
+    # Check if the key exists in the tree
+    return nil unless level_order.map(&:value).include?(key)
+
     curr_node.find(key, curr_node)
   end
 
