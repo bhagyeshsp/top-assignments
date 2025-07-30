@@ -72,6 +72,47 @@ class Tree
   #   end
   # end
 
+  def preorder(curr_node = @root, queue = [])
+    return queue if curr_node.nil?
+
+    yield curr_node if block_given?
+    queue << curr_node
+    preorder(curr_node.left, queue)
+    preorder(curr_node.right, queue)
+  end
+
+  def inorder(curr_node = @root, queue = [])
+    return queue if curr_node.nil?
+
+    yield curr_node if block_given?
+    inorder(curr_node.left, queue)
+    queue << curr_node
+    inorder(curr_node.right, queue)
+  end
+
+  def postorder(curr_node = @root, queue = [])
+    return queue if curr_node.nil?
+
+    yield curr_node if block_given?
+    postorder(curr_node.left, queue)
+    postorder(curr_node.right, queue)
+    queue << curr_node
+  end
+
+  def height(key)
+    # Check if any value in the tree matches the key
+    return nil unless level_order.map(&:value).include?(key)
+
+    curr_node = find(key)
+    calculate_height(curr_node)
+  end
+
+  def calculate_height(curr_node)
+    return 0 if curr_node.nil?
+
+    [calculate_height(curr_node.left), calculate_height(curr_node.right)].max + 1
+  end
+
   def pretty_print(node = @root, prefix = "", is_left = true)
     pretty_print(node.right, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right
     puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.value}"

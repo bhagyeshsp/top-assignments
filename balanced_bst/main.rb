@@ -27,3 +27,10 @@ p test_tree.level_order
 test_tree.level_order.each do |node|
   puts "\t#{node}\n\n"
 end
+p test_tree.preorder
+test_tree.preorder.each { |node| puts node.value }
+puts "--inorder---"
+test_tree.inorder.each { |node| puts node.value }
+puts "--postorder---"
+test_tree.postorder.each { |node| puts node.value }
+p test_tree.height(100)
