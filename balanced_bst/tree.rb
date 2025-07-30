@@ -134,6 +134,17 @@ class Tree
     end
   end
 
+  def balanced?(curr_node = @root, result = [])
+    return result.none?(false) if curr_node.nil?
+
+    result << ((calculate_height(curr_node.left) - calculate_height(curr_node.right)).abs <= 1)
+  end
+
+  def rebalance
+    new_arr = inorder.map(&:value)
+    build_tree(new_arr)
+  end
+
   def pretty_print(node = @root, prefix = "", is_left = true)
     pretty_print(node.right, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right
     puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.value}"

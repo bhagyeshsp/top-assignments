@@ -35,3 +35,20 @@ puts "--postorder---"
 test_tree.postorder.each { |node| puts node.value }
 p test_tree.height(100)
 p test_tree.depth(6345)
+# Let's imbalance the tree
+test_tree.insert(100)
+test_tree.insert(101)
+test_tree.insert(5000)
+test_tree.insert(5001)
+test_tree.insert(5002)
+test_tree.insert(5003)
+# Now let's check whether it works
+puts test_tree.balanced?
+# Print the unbalanced tree for visual inspection
+test_tree.pretty_print
+# Now let's rebalance it
+test_tree.rebalance
+# Print it for visual inspection
+test_tree.pretty_print
+# Recheck whether the method rightly identifies it as balanced
+puts test_tree.balanced?
