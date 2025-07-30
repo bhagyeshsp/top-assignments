@@ -34,3 +34,4 @@ test_tree.inorder.each { |node| puts node.value }
 puts "--postorder---"
 test_tree.postorder.each { |node| puts node.value }
 p test_tree.height(100)
+p test_tree.depth(6345)

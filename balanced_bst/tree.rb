@@ -113,6 +113,27 @@ class Tree
     [calculate_height(curr_node.left), calculate_height(curr_node.right)].max + 1
   end
 
+  def depth(key)
+    # Check if any value in the tree matches the key
+    return nil unless level_order.map(&:value).include?(key)
+
+    calculate_depth(key)
+  end
+
+  def calculate_depth(key, curr_node = @root, count = 0)
+    # Base case
+    return count if curr_node.value == key
+
+    # If key to be searched is in a subtree
+    if curr_node.value > key
+      count += 1
+      calculate_depth(key, curr_node.left, count)
+    elsif curr_node.value < key
+      count += 1
+      calculate_depth(key, curr_node.right, count)
+    end
+  end
+
   def pretty_print(node = @root, prefix = "", is_left = true)
     pretty_print(node.right, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right
     puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.value}"
