@@ -11,7 +11,6 @@ p test_tree
 test_tree.pretty_print
 test_tree.delete(600)
 p test_tree
-test_tree.level_order
 # test_tree.pretty_print
 # test_tree.delete(9)
 # test_tree.pretty_print
@@ -22,3 +21,9 @@ test_tree.level_order
 # test_tree.find(5)
 # # test_tree.level_order
 # p test_tree
+# Invoking the level_order method without a block returns an array
+p test_tree.level_order
+# Invoking the level_order method with a block is possible
+test_tree.level_order.each do |node|
+  puts "\t#{node}\n\n"
+end

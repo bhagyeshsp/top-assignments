@@ -45,13 +45,15 @@ class Tree
   end
 
   # This is a recursive version of the method
-  def level_order(queue = [@root])
-    return if queue.empty?
+  def level_order(queue = [@root], result = [])
+    return result if queue.empty?
 
     queue.push(queue[0].left) unless queue[0].left.nil?
     queue.push(queue[0].right) unless queue[0].right.nil?
-    p queue.shift.value
-    level_order(queue)
+    popped_node = queue.shift
+    result << popped_node
+    yield(popped_node) if block_given?
+    level_order(queue, result)
   end
 
   # This is an iterative version of the level_order method:
