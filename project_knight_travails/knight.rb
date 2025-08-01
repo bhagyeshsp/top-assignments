@@ -1,50 +1,68 @@
 # This class contains all methods for Knight objects
 class Knight
+  def initialize
+    @visit_history = []
+    @child_parent_pairs = {}
+    @origin = []
+    @destination = []
+  end
+
   def knight_moves(origin, destination)
-    next_moves = find_next_possible_moves(origin)
-    return destination if next_moves.any?(destination)
-
-    recursive_next_moves(next_moves, destination)
+    @origin = origin
+    @destination = destination
+    recursive_next_moves([origin], destination)
   end
 
-  # returns an array of maximum possible moves addatives to X and Y positions:
-  # [[-1, -2], [-1, 2], [-2, -1], [-2, 1], [1, -2], [1, 2], [2, -1], [2, 1]]
-  # Any knight can move 2 moves forward and 1 moves side ways
-  def find_addatives(input = [-1, -2, 1, 2])
-    input.permutation(2).to_a.reject { |combo| combo[0].abs == combo[1].abs }
-  end
-
+  # Adds all possible 8 combinations of moves and filters out illegal moves
+  # Here, degree_of_freedom is possible moves for a knight
   def find_next_possible_moves(position)
-    addatives = [[-1, -2], [-1, 2], [-2, -1], [-2, 1], [1, -2], [1, 2], [2, -1], [2, 1]]
-    p "position: #{position}"
-    unfiltered_moves = addatives.map { |combo| [position[0] + combo[0], position[1] + combo[1]] }
-    p unfiltered_moves
-    sleep 1
-    unfiltered_moves.reject { |combo| (combo[0].abs > 7) || (combo[1].abs > 7) }
+    degree_of_freedom = [[-1, -2], [-1, 2], [-2, -1], [-2, 1], [1, -2], [1, 2], [2, -1], [2, 1]]
+
+    unfiltered_moves = degree_of_freedom.map { |move| [position[0] + move[0], position[1] + move[1]] }
+
+    unfiltered_moves.reject do |move|
+      (move[0].abs > 7) || (move[1].abs > 7) || move[0].negative? || move[1].negative? || @visit_history.include?(move)
+    end
   end
 
-  # [[1, 1], [1, 3], [2, 0], [2, 4], [4, 0], [4, 4], [5, 1], [5, 3]]
-  def recursive_next_moves(next_moves_arr, destination, trail = [], generated_lib = [], round = 1)
+  # The method begins with the starting position as the next_move_arr
+  def recursive_next_moves(next_moves_arr, destination)
     p "Next moves arr: #{next_moves_arr}"
 
     i = 0
     while i <= (next_moves_arr.size - 1)
-      trail << next_moves_arr[i]
-      generated_moves = find_next_possible_moves(next_moves_arr[i])
-      generated_lib << generated_moves
-      p generated_lib
-      p "generated moves are: #{generated_moves}"
-      return trail if generated_moves.include?(destination)
 
-      trail.shift
+      @visit_history << next_moves_arr[i]
+      p generated_moves = find_next_possible_moves(next_moves_arr[i])
+      log_child_parent(generated_moves, next_moves_arr[i])
+      return trace_parents(@child_parent_pairs, next_moves_arr[i]) if generated_moves.include?(destination)
+
       i += 1
     end
-    round += 1
-    recursive_next_moves(generated_lib.flatten(1), destination, trail, generated_lib, round)
+    recursive_next_moves(generated_moves, destination)
   end
 
-  # Returns whether the next_moves array contains the destination tile
-  def reached?(destination, next_moves)
-    next_moves.include?(destination)
+  # Created child:parent hash entries, provides fast parent lookup
+  def log_child_parent(children, parent)
+    children.each { |child| @child_parent_pairs[child] = parent }
+    @child_parent_pairs
+  end
+
+  # Traces the parent move of the provided child move
+  # This helps create the trace once the destination is reached
+  def trace_parents(pairs, start_child, target_parent = @origin)
+    path = [start_child]
+    current = start_child
+
+    while pairs[current] && pairs[current] != target_parent
+      current = pairs[current]
+      path << current
+    end
+
+    return nil unless pairs[current] == target_parent
+
+    path << target_parent
+    path.reverse!
+    path << @destination
   end
 end
