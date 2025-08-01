@@ -26,20 +26,22 @@ class Knight
   end
 
   # The method begins with the starting position as the next_move_arr
-  def recursive_next_moves(next_moves_arr, destination)
+  def recursive_next_moves(next_moves_arr, destination, generated_lib = [])
+    # sleep 0.5
     p "Next moves arr: #{next_moves_arr}"
 
     i = 0
     while i <= (next_moves_arr.size - 1)
 
       @visit_history << next_moves_arr[i]
-      p generated_moves = find_next_possible_moves(next_moves_arr[i])
+      generated_moves = find_next_possible_moves(next_moves_arr[i])
+      generated_lib << generated_moves
       log_child_parent(generated_moves, next_moves_arr[i])
       return trace_parents(@child_parent_pairs, next_moves_arr[i]) if generated_moves.include?(destination)
 
       i += 1
     end
-    recursive_next_moves(generated_moves, destination)
+    recursive_next_moves(generated_lib.flatten(1), destination)
   end
 
   # Created child:parent hash entries, provides fast parent lookup
