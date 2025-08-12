@@ -160,6 +160,50 @@ describe TicTacToe do
   describe "#current_player" do
     # This is a Public Query method
     # Need to be tested
+    let(:player1) { instance_double(Player) }
+    let(:player2) { instance_double(Player) }
+
+    context "when the log_history's player array is empty" do
+      before do
+        history = [[], []]
+        new_game.instance_variable_set(:@log_history, history)
+        new_game.instance_variable_set(:@player1, player1)
+      end
+      it "returns player1 object" do
+        expect(new_game.current_player).to eq(player1)
+      end
+    end
+
+    context "when the log_history's player array has only one entry" do
+      before do
+        history = [[player1], [1]]
+        new_game.instance_variable_set(:@log_history, history)
+        new_game.instance_variable_set(:@player1, player1)
+        new_game.instance_variable_set(:@player2, player2)
+      end
+
+      it "returns player2 object" do
+        expect(new_game.current_player).to eq(player2)
+      end
+    end
+
+    context "when the log_history's player array has more than one entries" do
+      # ? In examples of this context, note that we haven't setup new_game's instance variables @player1 and @player2
+      # ? The reason behind is simple: the actual code in this condition doesn't look for instance variable.
+      # ? Instead, it looks for `@log_history[0][-2]`.
+      # ? Hence, the value is directly pulled from the array instead of checking with the new_game object's instance variable
+      it "returns the second-last player object regardless of array's size, e.g.size = 2" do
+        history = [[player1, player2], [1, 2]]
+        new_game.instance_variable_set(:@log_history, history)
+        expect(new_game.current_player).to eq(player1)
+      end
+
+      it "returns the second-last player object regardless of array's size, e.g.size = 4" do
+        history = [[player1, player2, player1, player2], [1, 2, 3, 4]]
+        new_game.instance_variable_set(:@log_history, history)
+        expect(new_game.current_player).to eq(player1)
+      end
+    end
   end
 
   describe "#get_input" do
