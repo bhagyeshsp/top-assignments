@@ -209,6 +209,39 @@ describe TicTacToe do
   describe "#get_input" do
     # This is a Public Command method
     # Need to be tested
+    # The conditions we need to test:
+
+    it "prints relevant error if the user input is already played" do
+      history = [%w[player1 player2], [1, 2]]
+      new_game.instance_variable_set(:@log_history, history)
+      error = "\e[0;31;49mCan't mark that position, it is already marked. Choose an available position.\e[0m"
+      allow(new_game).to receive(:puts)
+      allow(new_game).to receive(:gets).and_return("2", "3")
+
+      new_game.get_input
+
+      expect(new_game).to have_received(:puts).with(error).once
+    end
+
+    it "prints relevant error if the user input is out of 1..9 range" do
+      history = [%w[player1 player2], [1, 2]]
+      new_game.instance_variable_set(:@log_history, history)
+
+      error = "\e[0;31;49mYou entered a position out of range. It should be between 1 to 9. And should be available for marking.\e[0m"
+      allow(new_game).to receive(:puts)
+      allow(new_game).to receive(:gets).and_return("10", "3")
+      new_game.get_input
+      expect(new_game).to have_received(:puts).with(error).once
+    end
+
+    it "converts user's input to Integer Type when it is legitimate" do
+      history = [%w[player1 player2], [1, 2]]
+      new_game.instance_variable_set(:@log_history, history)
+
+      allow(new_game).to receive(:puts)
+      allow(new_game).to receive(:gets).and_return("3")
+      expect(new_game.get_input).to eq(3)
+    end
   end
 
   describe "#update_board" do
