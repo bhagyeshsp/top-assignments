@@ -140,13 +140,21 @@ describe TicTacToe do
   end
 
   describe "#play_round" do
-    # This is a Public Loop method
-    # Need to be tested
+    # This is a Public Script method
+    # No need to test
   end
 
   describe "#count_round" do
     # This is a Public Query method
     # Need to be tested
+    let(:player1) { instance_double(Player) }
+    let(:player2) { instance_double(Player) }
+
+    it "returns 5 when the log_history[1].size is 4" do
+      history = [[player1, player2, player1, player2], [1, 2, 3, 4]]
+      new_game.instance_variable_set(:@log_history, history)
+      expect(new_game.count_round).to eq(5)
+    end
   end
 
   describe "#current_player" do
