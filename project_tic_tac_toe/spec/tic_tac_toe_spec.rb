@@ -86,6 +86,57 @@ describe TicTacToe do
   describe "#loop_game" do
     # This is a Public Loop method
     # Need to be tested
+    # ? We only need to check whether the loop stops calling play_round
+    # ? if it meets one of the three conditions
+    let(:player1) { instance_double(Player) }
+    let(:player2) { instance_double(Player) }
+    before do
+      new_game.instance_variable_set(:@player1, player1)
+      new_game.instance_variable_set(:@player2, player2)
+      allow(new_game).to receive(:play_round)
+    end
+
+    context "when none of the conditions are met, the loop continues" do
+      it "continues execution when all conditions are false" do
+        # ? Note that we have added second return value of true to player1 call
+        # ? This will make sure that when the loop is executed second time, it will get short-circuited
+        allow(player1).to receive(:victor).and_return(false, true)
+        allow(player2).to receive(:victor).and_return(false)
+        allow(new_game).to receive(:count_round).and_return(5)
+        expect(new_game).to receive(:play_round).at_least(:once)
+        new_game.loop_game
+      end
+    end
+
+    context "when any of the conditions are met, the loop stops" do
+      it "stops calling #play_round when player1 is victor" do
+        # Interestingly, we don't need to setup receive for other two conditions
+        # Because while evaluating from left-to-right, the code short-circuits
+        # due to the first expression evaluating to true
+        allow(player1).to receive(:victor).and_return(true)
+        expect(new_game).to_not receive(:play_round)
+        new_game.loop_game
+      end
+
+      it "stops calling #play_round when player2 is victor" do
+        # Here, we are mocking player1 to receive :victor too
+        # The reason is that while evaluating conditions
+        # The loop_game will go from left-to-right
+        allow(player1).to receive(:victor).and_return(false)
+        allow(player2).to receive(:victor).and_return(true)
+        expect(new_game).to_not receive(:play_round)
+        new_game.loop_game
+      end
+
+      it "stops calling #play_round when #count_round returns 10" do
+        # Here, we will have to mock both player1 and player2 to receive false
+        # Because the loop_game will evaluate them before reaching the last condition
+        allow(player1).to receive(:victor).and_return(false)
+        allow(player2).to receive(:victor).and_return(false)
+        expect(new_game).to receive(:count_round).and_return(10)
+        new_game.loop_game
+      end
+    end
   end
 
   describe "#play_round" do
