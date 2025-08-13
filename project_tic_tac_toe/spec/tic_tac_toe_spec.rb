@@ -275,10 +275,18 @@ describe TicTacToe do
   describe "#check_victory" do
     # This method is a Public Query method
     # Needs to be tested
-  end
+    it "calls find_victor when victory is achieved" do
+      board_hash = { 1 => "x", 2 => "x", 3 => "x", 4 => "*", 5 => "*", 6 => "*", 7 => "*", 8 => "*", 9 => "*" }
+      new_game.instance_variable_set(:@board, board_hash)
+      expect(new_game).to receive(:find_victor).once
+      new_game.check_victory
+    end
 
-  describe "#declar_draw" do
-    # This method contains puts statements
-    # No need to test
+    it "doesn't call find_victor when there's no victory condition" do
+      board_hash = { 1 => "*", 2 => "*", 3 => "*", 4 => "*", 5 => "*", 6 => "*", 7 => "*", 8 => "*", 9 => "*" }
+      new_game.instance_variable_set(:@board, board_hash)
+      expect(new_game).not_to receive(:find_victor)
+      new_game.check_victory
+    end
   end
 end
