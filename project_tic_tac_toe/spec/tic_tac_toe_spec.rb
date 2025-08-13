@@ -260,6 +260,11 @@ describe TicTacToe do
   describe "#update_log" do
     # This is a Public Command method
     # Need to be tested
+    it "adds the player name and their move to the log_history instance variable" do
+      log_history = [%w[player1 player2], [1, 2]]
+      new_game.instance_variable_set(:@log_history, log_history)
+      expect { new_game.update_log("player1", 3) }.to change { log_history[0].last }.from("player2").to("player1")
+    end
   end
 
   describe "#display_board" do
