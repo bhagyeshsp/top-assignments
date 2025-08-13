@@ -247,6 +247,14 @@ describe TicTacToe do
   describe "#update_board" do
     # This is a Public Command method
     # Need to be tested
+    let(:player1) { double(sign: "x") }
+    it "updates the value of the provided cell with the player's sign" do
+      board_hash = { 1 => "*", 2 => "*", 3 => "*", 4 => "*", 5 => "*", 6 => "*", 7 => "*", 8 => "*", 9 => "*" }
+      new_game.instance_variable_set(:@board, board_hash)
+      allow(new_game).to receive(:current_player).and_return(player1)
+      allow(player1).to receive(:sign).and_return("x")
+      expect { new_game.update_board(1) }.to change { board_hash[1] }.from("*").to("x")
+    end
   end
 
   describe "#update_log" do
