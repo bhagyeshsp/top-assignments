@@ -45,6 +45,7 @@ describe ConnectFour do
 
       it "asks player1 to take turn if player2 had played the last turn" do
         log_history = [[player1, player2], [2, 3]]
+        new_game.instance_variable_set(:@game_log, log_history)
         message = "It is player-1's turn. Choose a column to drop your sprite."
         expect(new_game.ask_to_play).to eq(message)
       end
