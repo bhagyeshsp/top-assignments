@@ -16,14 +16,37 @@ describe ConnectFour do
   end
 
   describe "asks players to take turn" do
+    subject(:new_game) { described_class.new }
+
     context "when the game has just begun" do
       it "asks the player1 to take their turn" do
+        message = "It is player-1's turn. Choose a column to drop your sprite."
+        result = new_game.ask_to_play
+        expect(result).to eq(message)
       end
+
       it "records player1's move" do
+        allow(new_game).to receive(:take_input).and_return(3)
+        new_game.play_game
+
+        expect(new_game.game_log[1].first).to eq(3)
+      end
+
+      it "records player1's turn in game_log" do
+        player1 = new_game.instance_variable_get(:@player1)
+        allow(new_game).to receive(:take_input).and_return(5)
+        new_game.play_game
+        expect(new_game.game_log[0].first).to eq(player1)
       end
     end
     context "during the game play" do
-      xit "asks player2 to take turn if player1 had played the last turn" do
+      let(:player1) { instance_double(Player) }
+      let(:player2) { instance_double(Player) }
+
+      it "asks player1 to take turn if player2 had played the last turn" do
+        log_history = [[player1, player2], [2, 3]]
+        message = "It is player-1's turn. Choose a column to drop your sprite."
+        expect(new_game.ask_to_play).to eq(message)
       end
     end
   end
