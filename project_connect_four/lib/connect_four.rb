@@ -9,7 +9,7 @@ class ConnectFour
     @player1.sign = "o"
     @player2.sign = "x"
     @game_log = [[], []]
-    @columns = { col1: ["X"], col2: [], col3: [], col4: [], col5: [], col6: [], col7: [] }
+    @columns = { col1: [], col2: [], col3: [], col4: [], col5: [], col6: [], col7: [] }
   end
 
   def play_game
@@ -78,17 +78,17 @@ class ConnectFour
 
   def display_game_board
     puts "   +---+---+---+---+---+---+---+"
-    puts "   | #{@columns[:col1][5]}  | #{@columns[:col2][5]}  | #{@columns[:col3][5]}  | #{@columns[:col4][5]}  | #{@columns[:col5][5]}  | #{@columns[:col6][5]}  | #{@columns[:col7][5]}  |"
+    puts "   | #{@columns[:col1][5] || ' '} | #{@columns[:col2][5] || ' '} | #{@columns[:col3][5] || ' '} | #{@columns[:col4][5] || ' '} | #{@columns[:col5][5] || ' '} | #{@columns[:col6][5] || ' '} | #{@columns[:col7][5] || ' '} |"
     puts "   +---+---+---+---+---+---+---+"
-    puts "   | #{@columns[:col1][4]}  | #{@columns[:col2][4]}  | #{@columns[:col3][4]}  | #{@columns[:col4][4]}  | #{@columns[:col5][4]}  | #{@columns[:col6][4]}  | #{@columns[:col7][4]}  |"
+    puts "   | #{@columns[:col1][4] || ' '} | #{@columns[:col2][4] || ' '} | #{@columns[:col3][4] || ' '} | #{@columns[:col4][4] || ' '} | #{@columns[:col5][4] || ' '} | #{@columns[:col6][4] || ' '} | #{@columns[:col7][4] || ' '} |"
     puts "   +---+---+---+---+---+---+---+"
-    puts "   | #{@columns[:col1][3]}  | #{@columns[:col2][3]}  | #{@columns[:col3][3]}  | #{@columns[:col4][3]}  | #{@columns[:col5][3]}  | #{@columns[:col6][3]}  | #{@columns[:col7][3]}  |"
+    puts "   | #{@columns[:col1][3] || ' '} | #{@columns[:col2][3] || ' '} | #{@columns[:col3][3] || ' '} | #{@columns[:col4][3] || ' '} | #{@columns[:col5][3] || ' '} | #{@columns[:col6][3] || ' '} | #{@columns[:col7][3] || ' '} |"
     puts "   +---+---+---+---+---+---+---+"
-    puts "   | #{@columns[:col1][2]}  | #{@columns[:col2][2]}  | #{@columns[:col3][2]}  | #{@columns[:col4][2]}  | #{@columns[:col5][2]}  | #{@columns[:col6][2]}  | #{@columns[:col7][2]}  |"
+    puts "   | #{@columns[:col1][2] || ' '} | #{@columns[:col2][2] || ' '} | #{@columns[:col3][2] || ' '} | #{@columns[:col4][2] || ' '} | #{@columns[:col5][2] || ' '} | #{@columns[:col6][2] || ' '} | #{@columns[:col7][2] || ' '} |"
     puts "   +---+---+---+---+---+---+---+"
-    puts "   | #{@columns[:col1][1]}  | #{@columns[:col2][1]}  | #{@columns[:col3][1]}  | #{@columns[:col4][1]}  | #{@columns[:col5][1]}  | #{@columns[:col6][1]}  | #{@columns[:col7][1]}  |"
+    puts "   | #{@columns[:col1][1] || ' '} | #{@columns[:col2][1] || ' '} | #{@columns[:col3][1] || ' '} | #{@columns[:col4][1] || ' '} | #{@columns[:col5][1] || ' '} | #{@columns[:col6][1] || ' '} | #{@columns[:col7][1] || ' '} |"
     puts "   +---+---+---+---+---+---+---+"
-    puts "   | #{@columns[:col1][0]} | #{@columns[:col2][0]}  | #{@columns[:col3][0]}  | #{@columns[:col4][0]}  | #{@columns[:col5][0]}  | #{@columns[:col6][0]}  | #{@columns[:col7][0]}  |"
+    puts "   | #{@columns[:col1][0] || ' '} | #{@columns[:col2][0] || ' '} | #{@columns[:col3][0] || ' '} | #{@columns[:col4][0] || ' '} | #{@columns[:col5][0] || ' '} | #{@columns[:col6][0] || ' '} | #{@columns[:col7][0] || ' '} |"
     puts "   +---+---+---+---+---+---+---+"
     puts "     1   2   3   4   5   6   7 "
   end
