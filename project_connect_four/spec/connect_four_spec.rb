@@ -55,6 +55,7 @@ describe ConnectFour do
   describe "updates the column with the player's sprite after his turn" do
     subject(:new_game) { described_class.new }
     let(:player1) { instance_double(Player) }
+    let(:player2) { instance_double(Player) }
 
     context "when the player1 takes the first turn" do
       it "updates player1's sprite in their chosen column's first position" do
@@ -65,9 +66,18 @@ describe ConnectFour do
         expect { new_game.play_game }.to change { selected_column_value }.from([]).to(["X"])
       end
     end
-
     context "during the gameplay" do
-      xit "updates a player's sprite on top the existing ones" do
+      before do
+        new_game.instance_variable_get(:@columns)[:col3] = ["X"]
+      end
+
+      it "updates a player's sprite on top the existing ones" do
+        # player1 has already placed a sprite in column-3, now player2 drops a sprite in the same column
+        allow(new_game).to receive(:take_input).and_return(3)
+        allow(new_game).to receive(:current_player).and_return(player2)
+        allow(player2).to receive(:sign).and_return("O")
+        selected_column_value = new_game.instance_variable_get(:@columns)[:col3]
+        expect { new_game.play_game }.to change { selected_column_value }.from(["X"]).to(%w[X O])
       end
     end
   end
