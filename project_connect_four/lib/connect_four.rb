@@ -25,7 +25,7 @@ class ConnectFour
   end
 
   def show_welcome
-    "Welcome to the Connect Four game!"
+    puts "Welcome to the Connect Four game!"
   end
 
   def show_rules
@@ -36,9 +36,9 @@ class ConnectFour
 
   def ask_to_play
     if game_log.size.odd?
-      "It is player-2's turn. Choose a column to drop your sprite."
+      puts "It is player-2's turn. Choose a column to drop your sprite."
     else
-      "It is player-1's turn. Choose a column to drop your sprite."
+      puts "It is player-1's turn. Choose a column to drop your sprite."
     end
   end
 

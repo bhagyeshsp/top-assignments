@@ -13,6 +13,8 @@ require_relative "player"
 # The game records this move
 # The loop continues until there's a winning combo match
 
+new_game = ConnectFour.new
+new_game.play_game
 #   +---+---+---+---+---+---+---+
 # 6 |   |   |   |   |   |   |   |
 #   +---+---+---+---+---+---+---+
