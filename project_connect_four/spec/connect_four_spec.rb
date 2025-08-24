@@ -52,14 +52,14 @@ describe ConnectFour do
     end
   end
 
-  describe "displays updated game-board after each turn" do
+  describe "updates the column with the player's sprite after his turn" do
     context "when the player1 takes the first turn" do
-      xit "displays player1's sprite in their chosen column's bottom" do
+      it "updates player1's sprite in their chosen column's first position" do
       end
     end
 
     context "during the gameplay" do
-      xit "displays stacked sprites after a player's turn" do
+      xit "updates a player's sprite on top the existing ones" do
       end
     end
   end
