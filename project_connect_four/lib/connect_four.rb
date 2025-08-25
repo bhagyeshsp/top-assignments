@@ -10,6 +10,11 @@ class ConnectFour
     @player2.sign = "x"
     @game_log = [[], []]
     @columns = { col1: [], col2: [], col3: [], col4: [], col5: [], col6: [], col7: [] }
+    @complete = false
+  end
+
+  def loop_game
+    play_game until @complete == true
   end
 
   def play_game
@@ -35,7 +40,7 @@ class ConnectFour
   end
 
   def ask_to_play
-    if game_log.size.odd?
+    if game_log[0].size.odd?
       puts "It is player-2's turn. Choose a column to drop your sprite."
     else
       puts "It is player-1's turn. Choose a column to drop your sprite."
