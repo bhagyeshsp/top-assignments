@@ -14,7 +14,7 @@ require_relative "player"
 # The loop continues until there's a winning combo match
 
 new_game = ConnectFour.new
-new_game.play_game
+new_game.loop_game
 #   +---+---+---+---+---+---+---+
 # 6 |   |   |   |   |   |   |   |
 #   +---+---+---+---+---+---+---+
