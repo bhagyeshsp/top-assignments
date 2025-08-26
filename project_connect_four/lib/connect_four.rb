@@ -19,8 +19,8 @@ class ConnectFour
 
   def play_game
     if game_log.empty?
-      show_welcome
-      show_rules
+      puts show_welcome
+      puts show_rules
     end
     ask_to_play
     game_log[1] << take_input
@@ -30,7 +30,7 @@ class ConnectFour
   end
 
   def show_welcome
-    puts "Welcome to the Connect Four game!"
+    "Welcome to the Connect Four game!"
   end
 
   def show_rules
@@ -41,18 +41,23 @@ class ConnectFour
 
   def ask_to_play
     if game_log[0].size.odd?
-      puts "It is player-2's turn. Choose a column to drop your sprite."
+      "It is player-2's turn. Choose a column to drop your sprite."
     else
-      puts "It is player-1's turn. Choose a column to drop your sprite."
+      "It is player-1's turn. Choose a column to drop your sprite."
     end
   end
 
   def take_input
     input = gets.chomp.to_i
-    return input if input.between?(1, 7)
+    return input if input.between?(1, 7) && check_column_capacity(input)
 
     puts "Wrong input, pls provide your input again."
     take_input
+  end
+
+  def check_column_capacity(input)
+    column = @columns[:"col#{input}"]
+    column.size < 6 if column
   end
 
   def current_player
