@@ -83,7 +83,22 @@ describe ConnectFour do
   end
 
   describe "when a column is full" do
-    xit "raises and error and asks the player to choose another column" do
+    subject(:new_game) { described_class.new }
+    let(:player1) { instance_double(Player) }
+    let(:player2) { instance_double(Player) }
+
+    before do
+      new_game.instance_variable_get(:@columns)[:col3] = %w[X O X O X O]
+      new_game.instance_variable_set(:@game_log,
+                                     [[player1, player2, player1, player2, player1, player2], [3, 3, 3, 3, 3, 3]])
+    end
+
+    it "raises and error asking the player to choose another column" do
+      # the col3 is full and the next player tries to drop a sprite in that column
+      allow(new_game).to receive(:gets).and_return("3", "4")
+      error_msg = "Wrong input, pls provide your input again."
+      expect(new_game).to receive(:puts).with(error_msg).once
+      new_game.take_input
     end
   end
 
