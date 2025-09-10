@@ -15,6 +15,7 @@ class ConnectFour
 
   def loop_game
     play_game until @complete == true
+    puts declare_winner
   end
 
   def play_game
@@ -22,11 +23,12 @@ class ConnectFour
       puts show_welcome
       puts show_rules
     end
-    ask_to_play
+    puts ask_to_play
     game_log[1] << take_input
     game_log[0] << current_player
     update_selected_column
     display_game_board
+    @complete = true if win?
   end
 
   def show_welcome
@@ -101,5 +103,89 @@ class ConnectFour
     puts "   | #{@columns[:col1][0] || ' '} | #{@columns[:col2][0] || ' '} | #{@columns[:col3][0] || ' '} | #{@columns[:col4][0] || ' '} | #{@columns[:col5][0] || ' '} | #{@columns[:col6][0] || ' '} | #{@columns[:col7][0] || ' '} |"
     puts "   +---+---+---+---+---+---+---+"
     puts "     1   2   3   4   5   6   7 "
+  end
+
+  # This code is generated using AI, since this part was hindering my progress in TOP
+  def win?
+    rows = 6
+    cols = 7
+
+    # make a board (6 rows, 7 columns), filled with spaces
+    board = Array.new(rows) { Array.new(cols, " ") }
+
+    # fill the board from @columns (bottom of column is row 5)
+    col_number = 0
+    @columns.each_value do |column|
+      row_number = 5
+      column.each do |token|
+        board[row_number][col_number] = token
+        row_number -= 1
+      end
+      col_number += 1
+    end
+
+    # check horizontal wins
+    (0...rows).each do |r|
+      (0..(cols - 4)).each do |c|
+        val = board[r][c]
+        if val != " " &&
+           val == board[r][c + 1] &&
+           val == board[r][c + 2] &&
+           val == board[r][c + 3]
+          return true
+        end
+      end
+    end
+
+    # check vertical wins
+    (0..(rows - 4)).each do |r|
+      (0...cols).each do |c|
+        val = board[r][c]
+        if val != " " &&
+           val == board[r + 1][c] &&
+           val == board[r + 2][c] &&
+           val == board[r + 3][c]
+          return true
+        end
+      end
+    end
+
+    # check diagonal ↘
+    (0..(rows - 4)).each do |r|
+      (0..(cols - 4)).each do |c|
+        val = board[r][c]
+        if val != " " &&
+           val == board[r + 1][c + 1] &&
+           val == board[r + 2][c + 2] &&
+           val == board[r + 3][c + 3]
+          return true
+        end
+      end
+    end
+
+    # check diagonal ↙
+    (0..(rows - 4)).each do |r|
+      (3...cols).each do |c|
+        val = board[r][c]
+        if val != " " &&
+           val == board[r + 1][c - 1] &&
+           val == board[r + 2][c - 2] &&
+           val == board[r + 3][c - 3]
+          return true
+        end
+      end
+    end
+
+    # no win found
+    false
+  end
+
+  def declare_winner
+    winner = if @game_log[0].last == @player1
+               "Player-1"
+             else
+               "Player-2"
+             end
+    "Congratulations! #{winner} is the winner!"
   end
 end
