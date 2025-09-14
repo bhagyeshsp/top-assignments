@@ -1,0 +1,10 @@
+<%# As the render method iterates over the @article.comments collection, it assigns each comment to a local variable named the same as the partial, in this case comment, which is then available in the partial for us to show. %>
+<p>
+  <strong>Commenter:</strong>
+  <%= comment.commenter %>
+</p>
+
+<p>
+  <strong>Comment:</strong>
+  <%= comment.body %>
+</p>
